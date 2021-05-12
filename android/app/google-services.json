@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "584175755536",
+    "project_id": "adottapet",
+    "storage_bucket": "adottapet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584175755536:android:d0548ea2d7aef22fd7c595",
+        "android_client_info": {
+          "package_name": "com.example.adottapets"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584175755536-bnh9kgjelhicaqrp8thle357rfhr4eh3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.adottapets",
+            "certificate_hash": "0c1620b9fd33039a3f92bc823a928dd35292080f"
+          }
+        },
+        {
+          "client_id": "584175755536-mcv9lk657jbu6kdcmvdtpbl8riopbs01.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGOm-vAnHMFgL0bz3cSQy4sBahzw3llfU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584175755536-mcv9lk657jbu6kdcmvdtpbl8riopbs01.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
