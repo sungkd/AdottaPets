@@ -4,13 +4,21 @@ import 'package:adottapets/services/database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:adottapets/screens/wrapper.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+int initScreen;
 
 Future<void> main()  async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  SharedPreferences _preference = await SharedPreferences.getInstance();
+
+  initScreen = _preference.getInt('initScreen');
+  await _preference.setInt('initScreen', 1);
+
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -27,18 +35,12 @@ class LoadScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp(
-    //   initialRoute:  'home',
-    //   routes: {
-    //     // 'onboard' : (context) => OnBoardingPage(),
-    //     'home' : (context) => Wrapper(),
-    //   },
-    // );
+
     return MultiProvider(
       child: MaterialApp(
         color: Colors.white,
         debugShowCheckedModeBanner: false,
-        initialRoute:  'home',
+        initialRoute: initScreen == 0 || initScreen == null ? 'onboard' : 'home',
         routes: {
           'onboard' : (context) => OnBoardingPage(),
           'home' : (context) => Welcome(),
@@ -63,11 +65,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   void _onIntroEnd(context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => Wrapper()),
+      MaterialPageRoute(builder: (_) => Welcome()),
     );
   }
 
-  Widget _buildFullscrenImage() {
+  Widget _buildFullscreenImage() {
     return Image.asset(
       'assets/kitty.png',
       fit: BoxFit.cover,
@@ -123,7 +125,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           title: "AdottaPets",
           body:
           "Pet Adoption App.\n\n $_line1",
-          image: _buildFullscrenImage(),
+          image: _buildFullscreenImage(),
           decoration: pageDecoration.copyWith(
             contentMargin: const EdgeInsets.symmetric(horizontal: 16),
             fullScreen: true,

@@ -1,10 +1,10 @@
-import 'package:adottapets/screens/home.dart';
 import 'package:adottapets/screens/howtouse.dart';
 import 'package:adottapets/screens/myuploads.dart';
 import 'package:adottapets/services/auth.dart';
 import 'package:android_intent/android_intent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,13 +26,6 @@ class NavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-
-    print('N-UID- ${user.uid}');
-    print('N-EMAIl - ${user.email}');
-    print('N-PIC - ${user.photoURL}');
-    print('N-DISP - ${user.displayName}');
-    print('N-Vefify - ${user.emailVerified}');
-
     return SafeArea(
       child: Drawer(
         child: Material(
@@ -43,31 +36,31 @@ class NavigationDrawer extends StatelessWidget {
               padding: _padding,
               children: [
                 buildHeader(
-                  name: user.uid,
-                  img: user.photoURL,
+                  name: (user.displayName == null) ? 'loading' : user.displayName,
+                  img: (user.photoURL == null) ? 'loading' : user.photoURL,
                 ),
                 const SizedBox(height: 20,),
-                buildMenuItems(
-                  text: 'Home',
-                  icon: LineIcons.home,
-                  onClicked: () => selectedItem(context,0),
-                ),
+                // buildMenuItems(
+                //   text: 'My Uploads',
+                //   icon: FontAwesomeIcons.home,
+                //   onClicked: () => selectedItem(context,0),
+                // ),
 
                 buildMenuItems(
                   text: 'My Uploads',
-                  icon:  LineIcons.alternateCloudUpload,
+                  icon:  FontAwesomeIcons.cloudUploadAlt,
                   onClicked: () => selectedItem(context,1),
                 ),
 
                 buildMenuItems(
                   text: 'How to use',
-                  icon: LineIcons.questionCircleAlt,
+                  icon: FontAwesomeIcons.questionCircle,
                   onClicked: () => selectedItem(context,2),
                 ),
 
                 buildMenuItems(
                     text: 'Feedback',
-                    icon: LineIcons.envelopeAlt,
+                    icon: FontAwesomeIcons.envelope,
                     onClicked: () {
                       _sendEmail();
                     }
@@ -75,7 +68,7 @@ class NavigationDrawer extends StatelessWidget {
 
                 buildMenuItems(
                     text: 'Logout',
-                    icon: LineIcons.alternateSignOut,
+                    icon: FontAwesomeIcons.signOutAlt,
                     onClicked: () async {
                       Provider.of<AuthService>(context,listen: false).signOut();
                     }),
@@ -154,7 +147,10 @@ class NavigationDrawer extends StatelessWidget {
     final _color = Colors.white;
 
     return ListTile(
-      leading: Icon(icon, color: _color,),
+      leading: Padding(
+        padding: const EdgeInsets.fromLTRB(0,0,0,0),
+        child: Icon(icon, color: _color, ),
+      ),
       title: Text(text, style: TextStyle(color: _color),),
       onTap: onClicked,
     );
@@ -171,8 +167,12 @@ class NavigationDrawer extends StatelessWidget {
       child: Column(
         children: [
           Center(
-            child: CircleAvatar(
-             // backgroundImage: NetworkImage(img),
+            child: (img == 'loading') ? Container(
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200] ),
+            ) : CircleAvatar(
+              backgroundImage: NetworkImage(img),
               radius: 50.0,
             ),
           ),
@@ -189,7 +189,7 @@ class NavigationDrawer extends StatelessWidget {
           SizedBox(height: 10,),
           RichText(
             text: TextSpan(
-              text: name,
+              text: (name == 'loading') ? 'loading..' : name,
               style: TextStyle(
                 color: Colors.white,
                 letterSpacing: 1.0,
@@ -211,7 +211,7 @@ class NavigationDrawer extends StatelessWidget {
     switch (index) {
       case 0:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => Home(),
+          builder: (context) => MyUploads(),
         )
         );
         break;

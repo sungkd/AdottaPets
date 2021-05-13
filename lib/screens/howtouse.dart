@@ -38,7 +38,7 @@ class HowToUse extends StatelessWidget {
                 children: [
                   RichText(
                     text: TextSpan(
-                      text: '1. Login in using Google',
+                      text: '1. Login with Google',
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 15.0,
@@ -49,6 +49,21 @@ class HowToUse extends StatelessWidget {
                   SizedBox(width: 40,
                     child: Icon(LineIcons.googlePlus,
                       color: Colors.red[800],
+                      size: 25,),),
+
+                  RichText(
+                    text: TextSpan(
+                      text: ' or Email',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 15.0,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 40,
+                    child: Icon(LineIcons.envelopeAlt,
+                      color: Colors.yellow[800],
                       size: 25,),)
                 ],
               ),

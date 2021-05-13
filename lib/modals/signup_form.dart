@@ -22,6 +22,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   TextEditingController  _userNameController = TextEditingController();
   TextEditingController _emailController    = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -69,14 +71,11 @@ class _SignUpState extends State<SignUp> {
       _image = imageFile;
 
     });
-    print('$fileName');
-    print('$imageFile');
 
   }
 
   getImageURL({String name}) async {
     _url  = await FirebaseStorage.instance.ref(fileName).getDownloadURL();
-    print('$_url');
   }
 
 
@@ -125,7 +124,7 @@ class _SignUpState extends State<SignUp> {
         backgroundColor: Color(0xffFF045C5C),
         elevation: 20,
         title: RichText(text: TextSpan(
-            text: 'Hooman Registeration',
+            text: 'Hooman Registration',
             style: TextStyle(color: Colors.white,
               letterSpacing: 1.2,)),
         ),
@@ -185,6 +184,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     SizedBox(height: 10,),
                     TextFormField(
+                      maxLength: 10,
                       controller: _userNameController,
                       style: TextStyle(color: Colors.black87),
                       decoration: richTextDecoration.copyWith(
@@ -243,6 +243,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     SizedBox(height: 10,),
                     TextFormField(
+                      maxLength: 16,
                       obscureText: isHidden,
                       style: TextStyle(color: Colors.black87),
                       decoration: richTextDecoration.copyWith(
@@ -258,7 +259,6 @@ class _SignUpState extends State<SignUp> {
                     ),
 
                     SizedBox(height: 20,),
-                    //Confirm Password
 
                     //Confirm Password
                     RichText(
@@ -274,6 +274,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     SizedBox(height: 10,),
                     TextFormField(
+                      maxLength: 16,
                       obscureText: isHidden,
                       style: TextStyle(color: Colors.black87),
                       decoration: richTextDecoration.copyWith(
@@ -299,6 +300,9 @@ class _SignUpState extends State<SignUp> {
                       style: textButtonStyle,
                       onPressed: () async {
 
+                        FocusScope.of(context).requestFocus(new FocusNode());
+
+
                         if(_image != null) {
                           if(_userNameController.text.isNotEmpty &&
                               _userNameController.text.isNotEmpty &&
@@ -310,9 +314,17 @@ class _SignUpState extends State<SignUp> {
                             {
                               if(_passwordController.text.length == 8) {
 
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    backgroundColor: Colors.teal[800],
-                                    content: Text('Sending OTP to ${_emailController.text}'),));
+                                result = '';
+                                result = await _auth.fetchSignInMethodsForEmail
+                                        (_emailController.text);
+
+                                if(result.isEmpty) {
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(backgroundColor: Colors.teal[800],
+                                        content: Text('Sending OTP to ${_emailController.text}'
+                                    ),)
+                                  );
 
 
                                   EmailAuth.sessionName = "AdottaPets";
@@ -326,7 +338,14 @@ class _SignUpState extends State<SignUp> {
                                   else{
                                     warningText(context,'Invalid Email OTP not sent');
                                     submitValid = false;
+                                    result = '';
                                   }
+
+                                }
+                                else {
+                                  warningText(context,'Email already registered with other user');
+                                }
+
 
                               }
                               else
@@ -414,8 +433,6 @@ class _SignUpState extends State<SignUp> {
   enterOtp(BuildContext context) {
 
     FirebaseStorage storage = FirebaseStorage.instance;
-    dynamic _url;
-
 
     return showModalBottomSheet(context: context, builder: (context) {
       return Container(
@@ -462,8 +479,6 @@ class _SignUpState extends State<SignUp> {
                         .registerUser(_emailController.text,
                         _passwordController.text).whenComplete(() async {
 
-                          print('username - ${_userNameController.text}');
-
                           User _user = FirebaseAuth.instance.currentUser;
 
                           //Upload user image
@@ -483,30 +498,6 @@ class _SignUpState extends State<SignUp> {
                               });
                             });
                     });
-
-
-
-                    //     _passwordController.text).whenComplete(() async {
-                    //
-                    //   //Upload user image
-                    //   await storage.ref(fileName).putFile(
-                    //       imageFile,
-                    //       SettableMetadata(customMetadata: {
-                    //         'uploaded_by': _userNameController.text,
-                    //         'description': DateTime.now().toString()})
-                    //   ).whenComplete(() async {
-                    //     _url = await FirebaseStorage.instance
-                    //         .ref(fileName).getDownloadURL();
-                    //
-                    //     //Upload User details
-                    //     Provider.of<DatabaseService>(context,listen: false)
-                    //         .createUser(Provider.of<AuthService>
-                    //         (context,listen: false).getUserUid,
-                    //         _userNameController.text,
-                    //         _emailController.text,_url,true);
-                    //   });
-                    //
-                    // });
                   }
                   else {
                     warningText(context, 'Invalid OTP');

@@ -1,4 +1,5 @@
 import 'package:adottapets/constants/decorate.dart';
+import 'package:adottapets/constants/loading.dart';
 import 'package:adottapets/modals/sign_in_button.dart';
 import 'package:adottapets/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,7 @@ class _LoginFormState extends State<LoginForm> {
   TextEditingController _resetPasswordController = TextEditingController();
 
   bool isHidden = true;
+  bool loading = false;
 
   double _containerWidth = 380;
   double _containerHeight = 500;
@@ -40,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xffFF045C5C),
         elevation: 20,
@@ -204,6 +206,10 @@ class _LoginFormState extends State<LoginForm> {
                             ),),
                           style: textButtonStyle,
                           onPressed: () async {
+
+                            FocusScope.of(context).requestFocus(new FocusNode());
+
+                            setState( () => loading = true);
 
                           if(_emailController.text.isNotEmpty &&
                             _passwordController.text.isNotEmpty) {

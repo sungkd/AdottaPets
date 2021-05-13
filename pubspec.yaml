@@ -47,6 +47,8 @@ dependencies:
   line_icons: ^2.0.0
   flutter_phone_direct_caller: ^2.0.0
   android_intent: ^2.0.0
+  carousel_slider: ^3.0.0
+  shared_preferences: ^2.0.5
   intent:
 
 dev_dependencies:
